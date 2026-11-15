@@ -9,9 +9,13 @@ jobs:
         with: { distribution: temurin, java-version: '17' }
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: '8.7' }
-      - name: Compilar
+      - name: Descomprimir y compilar
         run: |
-          DIR=$(dirname "$(find . -name settings.gradle.kts | head -n 1)")
+          ZIP=$(find . -name "*.zip" | head -n 1)
+          echo "Zip: $ZIP"
+          mkdir -p /tmp/proj
+          unzip -q "$ZIP" -d /tmp/proj
+          DIR=$(dirname "$(find /tmp/proj -name settings.gradle.kts | head -n 1)")
           echo "Proyecto en: $DIR"
           cd "$DIR"
           gradle assembleDebug --no-daemon
